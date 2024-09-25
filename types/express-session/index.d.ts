@@ -149,6 +149,34 @@ declare namespace session {
         unset?: "destroy" | "keep" | undefined;
     }
 
+    type DiscordOAuth2User = {
+        id: String;
+        username: String;
+        avatar: String?;
+        discriminator: String;
+        public_flags: import("discord.js").UserFlags;
+        flags: import("discord.js").UserFlags;
+        banner: String?;
+        accent_color: String?;
+        global_name: String;
+        avatar_decoration_data: null;
+        banner_color: String?;
+        clan: null;
+        mfa_enabled: boolean;
+        locale: import("discord.js").Locale;
+        premium_type: import("discord.js").UserPremiumType;
+    };
+    type DiscordOAuth2Guild = {
+        id: String;
+        name: String;
+        icon: String?;
+        banner: String?;
+        owner: boolean;
+        permissions: import("discord.js").PermissionResolvable;
+        permissions_new: String; // This field is not documented within official docs, or at least I could no find it
+        features: import("discord.js").GuildFeature[];
+    };
+
     class Session {
         private constructor(request: Express.Request, data: SessionData);
 
@@ -165,6 +193,10 @@ declare namespace session {
          * For example we can set `req.session.cookie.expires` to `false` to enable the cookie to remain for only the duration of the user-agent.
          */
         cookie: Cookie;
+
+        user: DiscordOAuth2User;
+
+        guilds: DiscordOAuth2Guild[];
 
         /** To regenerate the session simply invoke the method. Once complete, a new SID and `Session` instance will be initialized at `req.session` and the `callback` will be invoked. */
         regenerate(callback: (err: any) => void): this;
